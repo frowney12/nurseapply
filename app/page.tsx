@@ -1151,7 +1151,6 @@ ${jobDesc}`;
                 </p>
               </div>
 
-              </div>
 
               {error && (
                 <p style={{color: "#e53e3e", textAlign: "center", marginTop: 16, fontSize: 14}}>{error}</p>
