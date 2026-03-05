@@ -682,7 +682,7 @@ export default function NurseApply() {
     try {
       if (isDOCX) {
         // Use mammoth to extract text client-side
-        const arrayBuffer = await toArrayBuffer(file);
+        const arrayBuffer = await toArrayBuffer(file) as ArrayBuffer;
         const mammoth = await import("mammoth"); const result = await mammoth.extractRawText({ arrayBuffer });
         const text = result.value.trim();
         setExtractedText(text);
