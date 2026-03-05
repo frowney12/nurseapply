@@ -725,6 +725,24 @@ export default function NurseApply() {
     return () => clearInterval(interval);
   }, [step]);
 
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("paid") === "true") {
+      const saved = localStorage.getItem("nurseapply_data");
+      if (saved) {
+        const data = JSON.parse(saved);
+        setSpecialty(data.specialty);
+        setJobDesc(data.jobDesc);
+        setResume(data.resume);
+        setExperience(data.experience);
+        localStorage.removeItem("nurseapply_data");
+        window.history.replaceState({}, "", "/");
+        setTimeout(() => handleGenerate(), 500);
+      }
+    }
+  }, []);
+
   const resumeReady = resumeMode === "upload"
     ? (uploadedFile !== null)
     : resume.trim().length > 80;
@@ -815,8 +833,8 @@ ${jobDesc}`;
 
   const handlePayAndGenerate = async () => {
     try {
-      const sessionData = btoa(JSON.stringify({ specialty, jobDesc, resume: extractedText || resume, experience }));
-      const res = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionData }) });
+      localStorage.setItem("nurseapply_data", JSON.stringify({ specialty, jobDesc, resume: extractedText || resume, experience }));
+      const res = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({}) });
       const { url } = await res.json();
       window.location.href = url;
     } catch (e) {
