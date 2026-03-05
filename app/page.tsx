@@ -731,6 +731,33 @@ export default function NurseApply() {
     if (params.get("paid") === "true") {
       const saved = localStorage.getItem("nurseapply_data");
       if (saved) {
+
+  const handleGenerateWithData = async (data: any) => {
+    setStep(3);
+    setLoadingStepIdx(0);
+    setError("");
+    try {
+      const response = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-haiku-4-5",
+          max_tokens: 1000,
+          messages: [{ role: "user", content: `Specialty: ${data.specialty}nExperience: ${data.experience}nJob Description: ${data.jobDesc}nResume: ${data.resume}nnGenerate a cover letter and 5 resume bullets.nnFormat:nCOVER_LETTER:n[cover letter]nnRESUME_BULLETS:n• bullet 1n• bullet 2n• bullet 3n• bullet 4n• bullet 5` }]
+        })
+      });
+      const d = await response.json();
+      const text = d.content?.[0]?.text || "";
+      const coverMatch = text.match(/COVER_LETTER:s*([\s\S]*?)(?=RESUME_BULLETS:|$)/);
+      const bulletsMatch = text.match(/RESUME_BULLETS:s*([\s\S]*?)$/);
+      setResults({ cover: coverMatch ? coverMatch[1].trim() : text, bullets: bulletsMatch ? bulletsMatch[1].trim() : "" });
+      setStep(4);
+    } catch (e) {
+      setError("Something went wrong. Please try again.");
+      setStep(2);
+    }
+  };
+
         const data = JSON.parse(saved);
         setSpecialty(data.specialty);
         setJobDesc(data.jobDesc);
@@ -738,7 +765,7 @@ export default function NurseApply() {
         setExperience(data.experience);
         localStorage.removeItem("nurseapply_data");
         window.history.replaceState({}, "", "/");
-        setTimeout(() => handleGenerate(), 500);
+        setTimeout(() => handleGenerateWithData(data), 500);
       }
     }
   }, []);
