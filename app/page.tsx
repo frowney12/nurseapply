@@ -659,9 +659,9 @@ export default function NurseApply() {
   });
 
   // Read file as ArrayBuffer (for mammoth)
-  const toArrayBuffer = (file) => new Promise((res, rej) => {
+  const toArrayBuffer = (file: File) => new Promise((res, rej) => {
     const r = new FileReader();
-    r.onload = () => res(r.result);
+    r.onload = () => res(r.result as ArrayBuffer);
     r.onerror = rej;
     r.readAsArrayBuffer(file);
   });
