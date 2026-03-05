@@ -1151,11 +1151,6 @@ ${jobDesc}`;
                 </p>
               </div>
 
-              <div className="demo-note">
-                Testing the demo?{" "}
-                <button className="demo-link" onClick={handleGenerate}>
-                  Skip payment and generate (demo mode)
-                </button>
               </div>
 
               {error && (
