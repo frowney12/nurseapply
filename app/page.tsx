@@ -651,7 +651,7 @@ export default function NurseApply() {
   const fileInputRef = useRef(null);
 
   // Read file as base64
-  const toBase64 = (file) => new Promise((res, rej) => {
+  const toBase64 = (file: File) => new Promise((res, rej) => {
     const r = new FileReader();
     r.onload = () => res(r.result.split(",")[1]);
     r.onerror = rej;
