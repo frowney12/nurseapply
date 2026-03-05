@@ -666,7 +666,7 @@ export default function NurseApply() {
     r.readAsArrayBuffer(file);
   });
 
-  const handleFileSelect = async (file) => {
+  const handleFileSelect = async (file: File) => {
     if (!file) return;
     const isPDF = file.type === "application/pdf";
     const isDOCX = file.name.endsWith(".docx") || file.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
