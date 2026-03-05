@@ -813,13 +813,24 @@ ${jobDesc}`;
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const handlePayAndGenerate = () => {
-    // In production: initialize Stripe Checkout here
-    // stripe.redirectToCheckout({ lineItems: [{ price: 'price_xxx', quantity: 1 }], mode: 'payment', ... })
-    // For demo: simulate payment success
-    setPaid(true);
-    handleGenerate();
+  const handlePayAndGenerate = async () => {
+    try {
+      const sessionData = btoa(JSON.stringify({ specialty, jobDesc, resume: extractedText || resume, experience }));
+      const res = await fetch("/api/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sessionData }) });
+      const { url } = await res.json();
+      window.location.href = url;
+    } catch (e) {
+      setError("Payment failed. Please try again.");
+    }
   };
+
+
+
+
+
+
+
+
 
   const handleReset = () => {
     setStep(1);
